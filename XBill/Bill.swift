@@ -19,6 +19,8 @@ class Bill: SKSpriteNode {
     var swappingFrames = [SKTexture]()
     var deadFrames = [SKTexture]()
     
+    var enemyID = 0
+    
     var state = BillState.walkingLeft{
         willSet{
             animate(for: newValue)

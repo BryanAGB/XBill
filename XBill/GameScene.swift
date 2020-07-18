@@ -20,13 +20,15 @@ class GameScene: SKScene {
     }
     
     var gameState = GameState.ready
-    var bill: Bill!
+    var bill : Bill!
     var score = 0
     
     
     override func didMove(to view: SKView) {
         loadHUD()
-        addBills()
+        for i in 0...10 {
+        addBills(billID: i)
+        }
     }
     
     func loadHUD () {
@@ -43,41 +45,49 @@ class GameScene: SKScene {
         
     }
     
-    func addBills () {
+    func addBills (billID: Int) {
         bill = Bill(imageNamed: GameConstants.StringConstants.billImageName)
+        bill.enemyID = billID
         bill.scale(to: CGSize(width: frame.size.width / 20, height: frame.size.height / 20))
-        bill.position = CGPoint(x: frame.midX, y: frame.midY)
+        let xSpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxX)! - 100)))
+        let ySpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxY)! - 100)))
+        print("xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
+        bill.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
+        //bill.position = CGPoint(x: frame.midX, y: frame.midY)
         bill.name = GameConstants.StringConstants.billName
         bill.loadTextures()
         bill.state = .walkingLeft
+        bill.zPosition = 1 
         self.addChild(bill)
+        print("Bill # \(bill.enemyID) created.")
+        let id = SKLabelNode()
+        id.text = ("\(billID)")
+        id.fontSize = 300
+        id.zPosition = 99
+        id.fontColor = UIColor.red
+        bill.addChild(id)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
             if bill.contains(location) {
-                killBill(reason: 0)
+                print("You killed bill #\(bill.enemyID)")
+                killBill(billID: bill.enemyID)
             }
         }
     }
     
-    func killBill(reason: Int) {
+    func killBill(billID: Int) {
        // run(soundPlayer.deathSound)
-        gameState = .finished
+        //gameState = .finished
         let deathAnimation : SKAction!
-        
-        switch reason {
-        case 0 :
-            deathAnimation = SKAction.animate(with: bill.deadFrames, timePerFrame: 0.1, resize: true, restore: true)
-        default :
-            deathAnimation = SKAction.animate(with: bill.deadFrames, timePerFrame: 0.1, resize: true, restore: true)
-        }
+        deathAnimation = SKAction.animate(with: bill.deadFrames, timePerFrame: 0.1, resize: true, restore: true)
         
         bill.run(deathAnimation) {
             self.bill.removeFromParent()
+            
         }
-        
     }
     
     override func update(_ currentTime: TimeInterval) {
