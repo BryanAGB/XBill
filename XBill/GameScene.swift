@@ -22,6 +22,7 @@ class GameScene: SKScene {
     var gameState = GameState.ready
     var bill : Bill!
     var score = 0
+    var matchedBills = Set<Bill>()
     
     
     override func didMove(to view: SKView) {
@@ -69,23 +70,21 @@ class GameScene: SKScene {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let location = touch.location(in: self)
-            if bill.contains(location) {
-                print("You killed bill #\(bill.enemyID)")
-                killBill(billID: bill.enemyID)
-            }
-        }
+        
+        guard let position = touches.first?.location(in: self) else { return }
+        guard let tappedBill = nodes(at: position).first(where: { $0 is Bill}) as? Bill
+            else { return}
+        killBill(tappedBill: tappedBill)
     }
     
-    func killBill(billID: Int) {
+    func killBill(tappedBill : Bill) {
        // run(soundPlayer.deathSound)
         //gameState = .finished
         let deathAnimation : SKAction!
         deathAnimation = SKAction.animate(with: bill.deadFrames, timePerFrame: 0.1, resize: true, restore: true)
         
-        bill.run(deathAnimation) {
-            self.bill.removeFromParent()
+        tappedBill.run(deathAnimation) {
+            tappedBill.removeFromParent()
             
         }
     }
