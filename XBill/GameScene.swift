@@ -22,19 +22,23 @@ class GameScene: SKScene {
     
     var gameState = GameState.ready
     var bill : Bill!
+    var computer : Computer!
     var score = 0
     var matchedBills = Set<Bill>()
-    
+    var scoreLabel : SKLabelNode!
     
     override func didMove(to view: SKView) {
         loadHUD()
+        //for _ in 0...6 {
+            addComputers()
+        //}
         for i in 0...10 {
         addBills(billID: i)
         }
     }
     
     func loadHUD () {
-        let scoreLabel = SKLabelNode()
+        scoreLabel = SKLabelNode()
         scoreLabel.text = "Score : \(score)"
         scoreLabel.position = CGPoint(x: frame.midX, y: frame.maxY - 150)
         scoreLabel.color = UIColor.red
@@ -62,14 +66,18 @@ class GameScene: SKScene {
         bill.zPosition = 1 
         self.addChild(bill)
         print("Bill # \(bill.enemyID) created.")
-        let id = SKLabelNode()
-        id.text = ("\(billID)")
-        id.fontSize = 300
-        id.zPosition = 99
-        id.fontColor = UIColor.red
-        bill.addChild(id)
+//        let id = SKLabelNode()
+//        id.text = ("\(billID)")
+//        id.fontSize = 300
+//        id.zPosition = 99
+//        id.fontColor = UIColor.red
+//        bill.addChild(id)
     }
-
+    
+    func addComputers () {
+        
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         guard let position = touches.first?.location(in: self) else { return }
@@ -91,11 +99,16 @@ class GameScene: SKScene {
         
         tappedBill.run(deathAnimation) {
             tappedBill.removeFromParent()
+            self.score += 5
             
         }
     }
     
+    func updateScore () {
+        self.scoreLabel.text = "Score : \(score)"
+    }
+    
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        updateScore()
     }
 }

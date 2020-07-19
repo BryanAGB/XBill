@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		930F5D6224C43845006F1A65 /* Computer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930F5D6124C43845006F1A65 /* Computer.swift */; };
 		934EA33224C2E7C80005D477 /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934EA33124C2E7C80005D477 /* AnimationHelper.swift */; };
 		93599E1224BCC4AA00C70BD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93599E1124BCC4AA00C70BD7 /* AppDelegate.swift */; };
 		93599E1424BCC4AA00C70BD7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 93599E1324BCC4AA00C70BD7 /* GameScene.sks */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		930F5D6124C43845006F1A65 /* Computer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Computer.swift; sourceTree = "<group>"; };
 		934EA33124C2E7C80005D477 /* AnimationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
 		93599E0E24BCC4A900C70BD7 /* XBill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XBill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93599E1124BCC4AA00C70BD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			children = (
 				93599E2924BCC96300C70BD7 /* audio */,
 				93599E1124BCC4AA00C70BD7 /* AppDelegate.swift */,
+				930F5D6124C43845006F1A65 /* Computer.swift */,
 				93599E1324BCC4AA00C70BD7 /* GameScene.sks */,
 				93599E1724BCC4AA00C70BD7 /* GameScene.swift */,
 				93599E1924BCC4AA00C70BD7 /* GameViewController.swift */,
@@ -181,6 +184,7 @@
 			files = (
 				93599E2B24BCDBA000C70BD7 /* Bill.swift in Sources */,
 				93599E1824BCC4AA00C70BD7 /* GameScene.swift in Sources */,
+				930F5D6224C43845006F1A65 /* Computer.swift in Sources */,
 				934EA33224C2E7C80005D477 /* AnimationHelper.swift in Sources */,
 				93599E1A24BCC4AA00C70BD7 /* GameViewController.swift in Sources */,
 				93599E1224BCC4AA00C70BD7 /* AppDelegate.swift in Sources */,
