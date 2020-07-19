@@ -26,12 +26,13 @@ class GameScene: SKScene {
     var score = 0
     var matchedBills = Set<Bill>()
     var scoreLabel : SKLabelNode!
+    var resetButton : SKLabelNode!
     
     override func didMove(to view: SKView) {
         loadHUD()
-        //for _ in 0...6 {
+        for _ in 0...6 {
             addComputers()
-        //}
+        }
         for i in 0...10 {
         addBills(billID: i)
         }
@@ -41,13 +42,8 @@ class GameScene: SKScene {
         scoreLabel = SKLabelNode()
         scoreLabel.text = "Score : \(score)"
         scoreLabel.position = CGPoint(x: frame.midX, y: frame.maxY - 150)
-        scoreLabel.color = UIColor.red
         scoreLabel.fontSize = 75
         addChild(scoreLabel)
-    }
-    
-    func generateComputers () {
-        
         
     }
     
@@ -55,7 +51,7 @@ class GameScene: SKScene {
         bill = Bill(imageNamed: GameConstants.StringConstants.billImageName)
         bill.enemyID = billID
         bill.scale(to: CGSize(width: frame.size.width / 20, height: frame.size.height / 20))
-        let xSpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxX)! - 100)))
+        let xSpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxX)! - 250)))
         let ySpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxY)! - 100)))
         print("xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
         bill.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
@@ -75,7 +71,17 @@ class GameScene: SKScene {
     }
     
     func addComputers () {
-        
+        computer = Computer(imageNamed: "bsdcpu")
+        computer.scale(to: CGSize(width: 70, height: 70))
+        let xSpawn = UInt32(Int.random(in: 200..<Int((view?.scene?.frame.maxX)! - 250)))
+        let ySpawn = UInt32(Int.random(in: 200..<Int((view?.scene?.frame.maxY)! - 200)))
+        print("xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
+        computer.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
+        let osType = String(computer.computerDictionary.randomElement()!.key)
+        let cpuType = String(computer.computerDictionary[osType]!)
+        computer.texture = SKTexture(imageNamed: cpuType)
+        addChild(computer)
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -103,6 +109,8 @@ class GameScene: SKScene {
             
         }
     }
+    
+    
     
     func updateScore () {
         self.scoreLabel.text = "Score : \(score)"

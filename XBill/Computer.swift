@@ -15,8 +15,4 @@ class Computer : SKSpriteNode {
     var cpuType : String!
     var osType : String!
     
-    func printOut () {
-        print("Cpu Type: \(String(describing: cpuType)), OS Type: \(String(describing: osType))")
-    }
-    
 }
