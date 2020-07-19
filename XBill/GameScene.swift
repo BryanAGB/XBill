@@ -11,7 +11,7 @@ import GameplayKit
 import CoreAudio
 
 class GameScene: SKScene {
-
+    
     enum GameState{
         case ready, ongoing, paused, finished
     }
@@ -26,16 +26,17 @@ class GameScene: SKScene {
     var score = 0
     var matchedBills = Set<Bill>()
     var scoreLabel : SKLabelNode!
-    var resetButton : SKLabelNode!
+    var targetComputer : Computer!
     
     override func didMove(to view: SKView) {
         loadHUD()
-        for _ in 0...6 {
-            addComputers()
+        for i in 0...6 {
+            addComputers(compID: i)
         }
         for i in 0...10 {
         addBills(billID: i)
         }
+
     }
     
     func loadHUD () {
@@ -45,6 +46,10 @@ class GameScene: SKScene {
         scoreLabel.fontSize = 75
         addChild(scoreLabel)
         
+        //TODO: Game Menu
+        //TODO: Highscore table & name input
+        //TODO:
+        
     }
     
     func addBills (billID: Int) {
@@ -53,15 +58,22 @@ class GameScene: SKScene {
         bill.scale(to: CGSize(width: frame.size.width / 20, height: frame.size.height / 20))
         let xSpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxX)! - 250)))
         let ySpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxY)! - 100)))
-        print("xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
+        print("Bill xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
         bill.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
         //bill.position = CGPoint(x: frame.midX, y: frame.midY)
         bill.name = GameConstants.StringConstants.billName
         bill.loadTextures()
         bill.state = .walkingLeft
-        bill.zPosition = 1 
+        bill.zPosition = 1
         self.addChild(bill)
         print("Bill # \(bill.enemyID) created.")
+        targetComputers()
+
+        //TODO: make Bills carry OS label
+        //TODO: Bills swap out OS
+        //TODO: Bills escape
+        
+        
 //        let id = SKLabelNode()
 //        id.text = ("\(billID)")
 //        id.fontSize = 300
@@ -70,17 +82,20 @@ class GameScene: SKScene {
 //        bill.addChild(id)
     }
     
-    func addComputers () {
+    func addComputers (compID: Int) {
         computer = Computer(imageNamed: "bsdcpu")
+        computer.computerID = compID
         computer.scale(to: CGSize(width: 70, height: 70))
         let xSpawn = UInt32(Int.random(in: 200..<Int((view?.scene?.frame.maxX)! - 250)))
         let ySpawn = UInt32(Int.random(in: 200..<Int((view?.scene?.frame.maxY)! - 200)))
-        print("xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
+        print("Computer xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
         computer.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
         let osType = String(computer.computerDictionary.randomElement()!.key)
         let cpuType = String(computer.computerDictionary[osType]!)
         computer.texture = SKTexture(imageNamed: cpuType)
         addChild(computer)
+        print("Computer # \(computer.computerID) created.")
+        // TODO: check for conflicting computer placement
 
     }
     
@@ -110,11 +125,19 @@ class GameScene: SKScene {
         }
     }
     
-    
+    func targetComputers () {
+      
+        let movetoTarget = SKAction.move(to: computer.position, duration: 10)
+        bill.run(movetoTarget)
+    }
     
     func updateScore () {
         self.scoreLabel.text = "Score : \(score)"
     }
+    
+    //TODO: Game logic
+    //TODO: Network infection
+    
     
     override func update(_ currentTime: TimeInterval) {
         updateScore()

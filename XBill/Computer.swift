@@ -14,5 +14,6 @@ class Computer : SKSpriteNode {
     
     var cpuType : String!
     var osType : String!
+    var computerID = 0
     
 }
