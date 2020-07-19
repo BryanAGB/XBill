@@ -23,5 +23,7 @@ struct GameConstants {
         static let leftPrefixKey = "left_"
         static let swapPrefixKey = "swap_"
         static let diePrefixKey = "die_"
+        
+        static let deathSound = "ahh"
     }
 }

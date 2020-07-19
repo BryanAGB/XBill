@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameplayKit
+import CoreAudio
 
 class GameScene: SKScene {
 
@@ -78,8 +79,13 @@ class GameScene: SKScene {
     }
     
     func killBill(tappedBill : Bill) {
-       // run(soundPlayer.deathSound)
+        
+        let randomInt = Int.random(in: 0..<4)
+        let deathsound = SKAction.playSoundFileNamed("ahh\(randomInt)", waitForCompletion: false)
+        run(deathsound)
+        
         //gameState = .finished
+        
         let deathAnimation : SKAction!
         deathAnimation = SKAction.animate(with: bill.deadFrames, timePerFrame: 0.1, resize: true, restore: true)
         
