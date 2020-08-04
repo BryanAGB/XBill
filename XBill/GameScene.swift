@@ -30,6 +30,8 @@ class GameScene: SKScene {
     var targetComputer : Computer!
     var spawnTimer: Timer?
     var computerSpawnLocations = [CGPoint]()
+    var targetArray = [0,1,2,3,4,5,6]
+    var computerArray = [Computer]()
     
     
 //    var resetButton : SKLabelNode!
@@ -42,6 +44,7 @@ class GameScene: SKScene {
         scoreLabel.text = "Score : \(score)"
         scoreLabel.position = CGPoint(x: frame.midX, y: frame.maxY - 150)
         scoreLabel.fontSize = 75
+        scoreLabel.zPosition = GameConstants.zPositions.hud
         addChild(scoreLabel)
         
         startButton = SKSpriteNode()
@@ -73,14 +76,20 @@ class GameScene: SKScene {
         let ySpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxY)! - 100)))
         print("Bill xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
         bill.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
-        
+        bill.zPosition = GameConstants.zPositions.bill
         //bill.position = CGPoint(x: frame.midX, y: frame.midY)
         bill.name = GameConstants.StringConstants.billName
         bill.loadTextures()
         bill.state = .walkingLeft
-        bill.zPosition = 1
         addChild(self.bill)
         print("Bill # \(self.bill.enemyID) created.")
+        
+        let virus = SKSpriteNode(imageNamed: "wingdows")
+        virus.anchorPoint = CGPoint(x: 0.5, y: 0)
+        virus.zPosition = GameConstants.zPositions.virus
+        bill.addChild(virus)
+        
+        
         targetComputers()
     
         //TODO: make Bills carry OS label
@@ -111,6 +120,7 @@ class GameScene: SKScene {
         computer.scale(to: CGSize(width: 70, height: 70))
         var randomPoint = generateRandomSpawn()
         print("Computer Spawn Point = \(randomPoint)")
+        computer.zPosition = GameConstants.zPositions.computer
         computer.position = randomPoint
         //TODO: Fix for frame overlap rather than CGPoint
         for i in 0..<computerSpawnLocations.count {
@@ -129,10 +139,11 @@ class GameScene: SKScene {
         computerSpawnLocations.append(self.computer.position)
         
         var os = SKSpriteNode(imageNamed: osType)
-       // os.position = CGPoint(x: , y: computer.position.y - 0)
-        os.zPosition = 2
+        // os.position = CGPoint(x: , y: computer.position.y - 0)
         os.scale(to: CGSize(width: 99, height: 99))
+        os.zPosition = GameConstants.zPositions.os
         computer.addChild(os)
+        computerArray.append(computer)
         print("Computer # \(String(describing: self.computer.computerID)) created.")
         
     }
@@ -155,6 +166,11 @@ class GameScene: SKScene {
         self.killBill(tappedBill: tappedBill)
     }
     
+    func installVirus () {
+        //TODO: Animate OS swapover
+        
+    }
+    
     func killBill(tappedBill : Bill) {
         
         let randomInt = Int.random(in: 0..<4)
@@ -174,8 +190,11 @@ class GameScene: SKScene {
     }
     
     func targetComputers () {
-      
-        let movetoTarget = SKAction.move(to: computer.position, duration: 10)
+        let billsTarget = targetArray.randomElement()
+        print("Bill's target = \(billsTarget)")
+        //targetArray.remove(at: billsTarget!)
+        let targetPosition = computerArray[billsTarget!].position
+        let movetoTarget = SKAction.move(to: targetPosition, duration: 10)
         bill.run(movetoTarget)
     }
     

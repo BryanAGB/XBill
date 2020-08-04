@@ -26,5 +26,14 @@ struct GameConstants {
         static let diePrefixKey = "die_"
         
         static let deathSound = "ahh"
+        
+    }
+    
+    struct zPositions {
+    static let hud : CGFloat = 9
+    static let bill : CGFloat = 4
+    static let virus  : CGFloat = 3
+    static let computer : CGFloat = 1
+    static let os : CGFloat = 2
     }
 }
