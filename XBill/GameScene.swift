@@ -135,9 +135,10 @@ class GameScene: SKScene {
         
         for touch in touches {
             let location = touch.location(in: self)
-            if startButton.contains(location) {
+            if startButton.contains(location) && gameState == .ready {
                 print("touched button!")
                 startButton.removeFromParent()
+                gameState = .ongoing
                 gameLoop()
             }
         }
