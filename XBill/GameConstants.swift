@@ -19,6 +19,7 @@ struct GameConstants {
         static let billLeftAtlas = "left"
         static let billSwapAtlas = "swap"
         static let billDieAtlas = "die"
+        static let computerName = "Computer"
         static let rightPrefixKey = "right_"
         static let leftPrefixKey = "left_"
         static let swapPrefixKey = "swap_"
