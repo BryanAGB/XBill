@@ -62,7 +62,6 @@ class GameScene: SKScene {
         
         //TODO: Game Menu
         //TODO: Highscore table & name input
-        //TODO:
         
     }
     
@@ -108,18 +107,19 @@ class GameScene: SKScene {
         computer = Computer(imageNamed: "bsdcpu")
         computer.computerID = compID
         computer.name = GameConstants.StringConstants.computerName
+        computer.anchorPoint = CGPoint(x: 0.35, y: 0.66)
         computer.scale(to: CGSize(width: 70, height: 70))
         var randomPoint = generateRandomSpawn()
         print("Computer Spawn Point = \(randomPoint)")
         computer.position = randomPoint
-        
+        //TODO: Fix for frame overlap rather than CGPoint
         for i in 0..<computerSpawnLocations.count {
-            print("Computer spawn location = \(computerSpawnLocations[i])")
+            //print("Computer spawn location = \(computerSpawnLocations[i])")
             if computer.frame.contains(computerSpawnLocations[i]) {
                 print("Spawn overlap. Generating new spawn....")
                 //computer.position = CGPoint(x: computer.position.x + 140, y: computer.position.y + 140)
                 randomPoint = generateRandomSpawn()
-                computer.position = randomPoint
+                computer.position = CGPoint(x: randomPoint.x + 100, y: randomPoint.y + 100)
                 }
             }
         let osType = String(self.computer.computerDictionary.randomElement()!.key)
@@ -127,6 +127,12 @@ class GameScene: SKScene {
         computer.texture = SKTexture(imageNamed: cpuType)
         addChild(self.computer)
         computerSpawnLocations.append(self.computer.position)
+        
+        var os = SKSpriteNode(imageNamed: osType)
+       // os.position = CGPoint(x: , y: computer.position.y - 0)
+        os.zPosition = 2
+        os.scale(to: CGSize(width: 99, height: 99))
+        computer.addChild(os)
         print("Computer # \(String(describing: self.computer.computerID)) created.")
         
     }
