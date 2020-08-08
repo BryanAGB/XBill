@@ -30,10 +30,15 @@ struct GameConstants {
     }
     
     struct zPositions {
-    static let hud : CGFloat = 9
+    static let hud : CGFloat = 10
     static let bill : CGFloat = 4
-    static let virus  : CGFloat = 3
+    static let virus  : CGFloat = -1 //child zPos is additive to parent node,virus with -1 is 3 on the global zPos scale
     static let computer : CGFloat = 1
     static let os : CGFloat = 2
+    }
+    
+    struct PhysicsCategories {
+        static let billCategory : UInt32 = 0x1 << 0
+        static let computerCategory : UInt32 = 0x1 << 1
     }
 }
