@@ -73,12 +73,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bill = Bill(imageNamed: GameConstants.StringConstants.billImageName)
         bill.enemyID = billID
         bill.scale(to: CGSize(width: frame.size.width / 20, height: frame.size.height / 20))
-        let xSpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxX)! - 250)))
-        let ySpawn = UInt32(Int.random(in: 100..<Int((view?.scene?.frame.maxY)! - 100)))
-        print("Bill xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
+        var xSpawn = 0
+        var ySpawn = 0
+        let minX = Int((view?.scene?.frame.minX)!)
+        let maxX = Int((view?.scene?.frame.maxX)!)
+        let minY = Int((view?.scene?.frame.minY)!)
+        let maxY = Int((view?.scene?.frame.maxY)!)
+        
+        xSpawn = Int.random(in: minX - 100 ... maxX + 100)
+        
+        if xSpawn >= minX && xSpawn <= maxX {
+            let y = Int.random(in: 1...2)
+            if y == 1 {
+                ySpawn = Int.random(in: -100...minY)
+            } else{
+                ySpawn = Int.random(in: maxY...maxY + 100)
+            }
+        }
+        else{
+            ySpawn = Int.random(in: minY - 100...maxY+100)
+        }
+
+        //print("Bill xSpawn = \(xSpawn), ySpawn = \(ySpawn)")
         bill.position = CGPoint(x: CGFloat(xSpawn), y: CGFloat(ySpawn))
         bill.zPosition = GameConstants.zPositions.bill
-        //bill.position = CGPoint(x: frame.midX, y: frame.midY)
         bill.name = GameConstants.StringConstants.billName
         bill.loadTextures()
         bill.state = .walkingLeft
@@ -87,6 +105,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         bill.physicsBody = SKPhysicsBody(rectangleOf: bill.size)
         bill.physicsBody?.isDynamic = true
+        bill.physicsBody?.allowsRotation = false
         bill.physicsBody?.affectedByGravity = false
         bill.physicsBody?.categoryBitMask = GameConstants.PhysicsCategories.billCategory
         bill.physicsBody?.contactTestBitMask = GameConstants.PhysicsCategories.computerCategory
@@ -141,7 +160,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(self.computer)
         computerSpawnLocations.append(self.computer.position)
         
-        var os = SKSpriteNode(imageNamed: osType)
+        let os = SKSpriteNode(imageNamed: osType)
+        print(os)
         // os.position = CGPoint(x: , y: computer.position.y - 0)
         os.scale(to: CGSize(width: 99, height: 99))
         os.zPosition = GameConstants.zPositions.os
@@ -233,9 +253,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0...6 {
             addComputers(compID: i)
         }
-        for i in 0...0 {
-        addBills(billID: i)
+            var counter = 1
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            self.addBills(billID: counter)
+            counter += 1
+            if counter == 20 {
+                timer.invalidate()
+            }
         }
+          
     }
     //TODO: Network infection
             //Bezier path?
