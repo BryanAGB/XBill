@@ -204,28 +204,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if targetBill.targetComputerID == computer.computerID{
             print("Bill collided with target computer")
-            installVirus(computer: computer)
+            installVirus(bill: targetBill, computer: computer)
         } else {
             print("Bill collided with non-target computer")
         }
-        //print("Bill Target ID = \(targetBill.targetComputerID)")
-//        if object.name == GameConstants.StringConstants.computerName {
-//            print ("Bill with target ID \(bill.targetComputerID) touched a computer with compID \(object.computerID)")
-//            installVirus(bill: bill as! Bill, computer: object as! Computer)
-//        }
-        
     }
     
-    func installVirus (computer: Computer) {
+    func installVirus (bill: Bill, computer: Computer) {
         let infectionSound = SKAction.playSoundFileNamed("mssound", waitForCompletion: false)
         run(infectionSound)
         }
     
     func killBill(tappedBill : Bill) {
         
-       // let randomInt = Int.random(in: 0..<4)
-       // let deathsound = SKAction.playSoundFileNamed("ahh\(randomInt)", waitForCompletion: false)
-       // run(deathsound)
+//        let randomInt = Int.random(in: 0..<4)
+//        let deathsound = SKAction.playSoundFileNamed("ahh\(randomInt)", waitForCompletion: false)
+//        run(deathsound)
         
         //gameState = .finished
         
