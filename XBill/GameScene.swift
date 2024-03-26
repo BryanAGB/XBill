@@ -30,7 +30,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var targetComputer : Computer!
     var spawnTimer: Timer?
     var computerSpawnLocations = [CGPoint]()
-    var targetArray = [0,1,2,3,4,5,6]
+    var targetArray = [Int]()
     var computerArray = [Computer]()
     
     
@@ -71,7 +71,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addBills (billID: Int) {
         bill = Bill(imageNamed: GameConstants.StringConstants.billImageName)
-        bill.enemyID = billID
+        bill.billID = billID
+        bill.targetComputerID = targetArray.randomElement()!
         bill.scale(to: CGSize(width: frame.size.width / 20, height: frame.size.height / 20))
         var xSpawn = 0
         var ySpawn = 0
@@ -101,7 +102,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bill.loadTextures()
         bill.state = .walkingLeft
         addChild(self.bill)
-        print("Bill # \(self.bill.enemyID) created.")
+        //print("Bill # \(self.bill.billID) created.")
         
         bill.physicsBody = SKPhysicsBody(rectangleOf: bill.size)
         bill.physicsBody?.isDynamic = true
@@ -118,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bill.addChild(virus)
         
         
-        targetComputers()
+        targetComputers(billsTarget: bill.targetComputerID)
     
         //TODO: make Bills carry OS label
         //TODO: Bills swap out OS
@@ -134,14 +135,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         computer.anchorPoint = CGPoint(x: 0.35, y: 0.66)
         computer.scale(to: CGSize(width: 70, height: 70))
         var randomPoint = generateRandomSpawn()
-        print("Computer Spawn Point = \(randomPoint)")
+       // print("Computer Spawn Point = \(randomPoint)")
         computer.zPosition = GameConstants.zPositions.computer
         computer.position = randomPoint
         //TODO: Fix for frame overlap rather than CGPoint
         for i in 0..<computerSpawnLocations.count {
             //print("Computer spawn location = \(computerSpawnLocations[i])")
             if computer.frame.contains(computerSpawnLocations[i]) {
-                print("Spawn overlap. Generating new spawn....")
+               // print("Spawn overlap. Generating new spawn....")
                 //computer.position = CGPoint(x: computer.position.x + 140, y: computer.position.y + 140)
                 randomPoint = generateRandomSpawn()
                 computer.position = CGPoint(x: randomPoint.x + 100, y: randomPoint.y + 100)
@@ -161,13 +162,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         computerSpawnLocations.append(self.computer.position)
         
         let os = SKSpriteNode(imageNamed: osType)
-        print(os)
+        //print(os)
         // os.position = CGPoint(x: , y: computer.position.y - 0)
         os.scale(to: CGSize(width: 99, height: 99))
         os.zPosition = GameConstants.zPositions.os
         computer.addChild(os)
         computerArray.append(computer)
-        print("Computer # \(String(describing: self.computer.computerID)) created.")
+        targetArray.append(compID)
+       // print("Computer # \(String(describing: self.computer.computerID)) created.")
         
     }
     
@@ -183,7 +185,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let location = touch.location(in: self)
             if startButton.contains(location) && gameState == .ready {
-                print("touched button!")
+                //print("touched button!")
                 startButton.removeFromParent()
                 gameState = .ongoing
                 gameLoop()
@@ -196,9 +198,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.killBill(tappedBill: tappedBill)
     }
     
-    func collision(between bill: SKSpriteNode, object: SKSpriteNode) {
+    func collision(between bill: SKSpriteNode, computer: SKSpriteNode) {
         let targetBill = bill as! Bill
-        print("Bill Target ID = \(targetBill.targetComputerID)")
+        let computer = computer as! Computer
+        
+        if targetBill.targetComputerID == computer.computerID{
+            print("Bill collided with target computer")
+            installVirus(computer: computer)
+        } else {
+            print("Bill collided with non-target computer")
+        }
+        //print("Bill Target ID = \(targetBill.targetComputerID)")
 //        if object.name == GameConstants.StringConstants.computerName {
 //            print ("Bill with target ID \(bill.targetComputerID) touched a computer with compID \(object.computerID)")
 //            installVirus(bill: bill as! Bill, computer: object as! Computer)
@@ -206,14 +216,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func installVirus (bill : Bill, computer: Computer) {
-        print("Bill's Target \(bill.targetComputerID) and Touched Computer ID = \(computer.computerID!)")
-        if bill.targetComputerID == computer.computerID {
-        //TODO: Animate OS swapover
+    func installVirus (computer: Computer) {
         let infectionSound = SKAction.playSoundFileNamed("mssound", waitForCompletion: false)
         run(infectionSound)
         }
-    }
     
     func killBill(tappedBill : Bill) {
         
@@ -233,11 +239,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func targetComputers () {
-        let billsTarget = targetArray.randomElement()
-        print("Bill's target = \(String(describing: billsTarget))")
+    func targetComputers (billsTarget: Int) {
+        let billsTarget = billsTarget
+        //print("Bill's target = \(String(describing: billsTarget))")
         //targetArray.remove(at: billsTarget!)
-        let targetPosition = computerArray[billsTarget!].position
+        let targetPosition = computerArray[billsTarget].position
         let randomTime = Double.random(in: 5...15)
         let movetoTarget = SKAction.move(to: targetPosition, duration: randomTime)
         bill.run(movetoTarget)
@@ -267,21 +273,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //Bezier path?
     
     func didBegin(_ contact: SKPhysicsContact) {
-        print("Collision detected")
-//        if contact.bodyA.node?.name == "Bill" {
-//            let targetBill = contact.bodyA.node as! Bill
-//            print(targetBill.targetComputerID)
-//            let targetComputer = contact.bodyB.node as! Computer
-//            print("ComputerID = \(targetComputer.computerID!)")
-//            collision(between: targetBill, object: targetComputer)
-//        }
-//        else if contact.bodyB.node?.name == "Bill" {
-//            let targetBill = contact.bodyB.node as! Bill
-//            print("target \(targetBill.targetComputerID)")
-//            let targetComputer = contact.bodyA.node as! Computer
-//            print("ComputerID = \(targetComputer.computerID!)")
-//            collision(between: targetBill, object: targetComputer)
-//        }
+        //print("Collision detected")
+        if contact.bodyA.node?.name == "Bill" {
+            let targetBill = contact.bodyA.node as! Bill
+            //print(targetBill.targetComputerID)
+            let targetComputer = contact.bodyB.node as! Computer
+            //print("ComputerID = \(targetComputer.computerID!)")
+            collision(between: targetBill, computer: targetComputer)
+        }
+        else if contact.bodyB.node?.name == "Bill" {
+            let targetBill = contact.bodyB.node as! Bill
+           //print("target \(targetBill.targetComputerID)")
+            let targetComputer = contact.bodyA.node as! Computer
+            //print("ComputerID = \(targetComputer.computerID!)")
+            collision(between: targetBill, computer: targetComputer)
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {

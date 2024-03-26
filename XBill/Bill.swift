@@ -19,7 +19,7 @@ class Bill: SKSpriteNode {
     var swappingFrames = [SKTexture]()
     var deadFrames = [SKTexture]()
     
-    var enemyID = 0
+    var billID = 0
     var targetComputerID = 0
     
     var state = BillState.walkingLeft{
